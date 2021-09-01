@@ -18,12 +18,12 @@ df_experiments = pd.DataFrame()
 best_parents = []
 experiments = []
 
-for i in range(10):
-    parent = generate_solution(-32.768, 32.768, 2)
-    best_parent, iterations = opmc(parent, True, 5, 10)
+for i in range(5):
+    #parent = generate_solution(-32.768, 32.768, 2)
+    #best_parent, iterations = opmc(parent, False, 1000, 100)
 
-    #parents = [generate_solution(-32.768, 32.768, 2) for i in range(5)]
-    #best_parent, iterations = mpmc(parents, True, 100, 100)
+    parents = [generate_solution(-32.768, 32.768, 2) for i in range(10)]
+    best_parent, iterations = mpmc(parents, True, 100, 100)
 
     best_parents.append(best_parent)
     experiments.append(iterations)
@@ -32,7 +32,7 @@ for i in range(10):
         {'algoritmo':["UnPadreVariosHijos"] * cantidad,
          'experimento':[i]*cantidad,
          'iteracion':list(range(0, cantidad)),
-         'x1':list(iterations['x1']),
+         'x1':iterations['x1'],
          'x2':iterations['x2'],
          'evaluacion':iterations['f(x)']}
     )
