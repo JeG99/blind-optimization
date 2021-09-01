@@ -20,9 +20,11 @@ experiments = []
 
 for i in range(10):
     parent = generate_solution(-32.768, 32.768, 2)
+    best_parent, iterations = opmc(parent, True, 5, 10)
+
     #parents = [generate_solution(-32.768, 32.768, 2) for i in range(5)]
-    best_parent, iterations = opmc(parent, True, 100, 100, 10)
-    #best_parent, iterations = mpmc(parents, True, 100, 100, 20)
+    #best_parent, iterations = mpmc(parents, True, 100, 100)
+
     best_parents.append(best_parent)
     experiments.append(iterations)
     cantidad = len(iterations)
@@ -30,7 +32,7 @@ for i in range(10):
         {'algoritmo':["UnPadreVariosHijos"] * cantidad,
          'experimento':[i]*cantidad,
          'iteracion':list(range(0, cantidad)),
-         'x1':iterations['x1'],
+         'x1':list(iterations['x1']),
          'x2':iterations['x2'],
          'evaluacion':iterations['f(x)']}
     )
@@ -38,11 +40,14 @@ for i in range(10):
 
     df.loc[1:].apply(lambda row: poner_menor(row), axis=1)
 
+    print(df)
+
     df_experiments = df_experiments.append(df)
 
 df_experiments.reset_index(drop=True, inplace=True)
 results = df_experiments.groupby('iteracion').agg({'menor': ['mean', 'std']})
-print(df_experiments)
+print(results)
+# print(best_parents)
 #results.plot()
 
 promedios = results['menor']['mean'].values
@@ -55,11 +60,6 @@ plt.ylabel('menor encontrado')
 plt.legend(['promedio', 'promedio+std','promedio-std'])
 plt.title('1P-VH')
 plt.show()
-
-#plt.figure()
-#plt.plot(results.index, results['x1'])
-#plt.plot(results.index, results['x2'])
-#plt.show()
 
 
 
